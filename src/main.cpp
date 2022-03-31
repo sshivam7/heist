@@ -1,8 +1,8 @@
 /**
-*	main.cpp
-*	Description: Main program entry point for OpenGl Heist Game
-*	@author Shivam Sood
-*	@version 1.0 2022/03/29
+* main.cpp
+* Description: Main program entry point for OpenGl Heist Game
+* @author Shivam Sood
+* @version 1.0 2022/03/29
 */
 
 #include <glad/glad.h>
@@ -88,6 +88,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	// Exit on escape
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
+	}
+	if (key >= 0 && key < 1024) {
+		if (action == GLFW_PRESS)
+			game.set_key(key, true);
+		else if (action == GLFW_RELEASE)
+			game.set_key(key, false);
 	}
 }
 
