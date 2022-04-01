@@ -45,6 +45,19 @@ void Shader::activate() {
 	glUseProgram(this->m_id);
 }
 
+unsigned int Shader::getId() {
+	return this->m_id;
+}
+
+void Shader::setVec3(const char* name, const glm::vec3& vec) {
+	unsigned int loc = glGetUniformLocation(this->m_id, name);
+	glUniform3f(loc, vec.x, vec.y, vec.z);
+}
+
+void Shader::setMat4(const char* name, const glm::mat4& matrix) {
+	unsigned int loc = glGetUniformLocation(this->m_id, name);
+	glUniformMatrix4fv(loc, 1, false, glm::value_ptr(matrix));
+}
 
 void Shader::checkErrors(unsigned int shader, const char* type) {
 	GLint success;

@@ -21,6 +21,10 @@ public:
 
 	// Member functions
 	void activate();
+	unsigned int getId();
+
+	void setVec3(const char* name, const glm::vec3& vec);
+	void setMat4(const char* name, const glm::mat4& matrix);
 
 private:
 	// Reference to shader program ID

@@ -143,16 +143,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="lib\glad.c" />
+    <ClCompile Include="lib\stb_image.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\utils\resource_manager.cpp" />
     <ClCompile Include="src\utils\shader.cpp" />
+    <ClCompile Include="src\utils\sprite.cpp" />
     <ClCompile Include="src\utils\texture.cpp" />
+    <ClCompile Include="src\utils\texture_cache.cpp" />
     <ClCompile Include="src\utils\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lib\stb_image.h" />
     <ClInclude Include="src\game\game.h" />
+    <ClInclude Include="src\utils\resource_manager.h" />
     <ClInclude Include="src\utils\shader.h" />
+    <ClInclude Include="src\utils\sprite.h" />
     <ClInclude Include="src\utils\texture.h" />
+    <ClInclude Include="src\utils\texture_cache.h" />
     <ClInclude Include="src\utils\util.h" />
   </ItemGroup>
   <ItemGroup>

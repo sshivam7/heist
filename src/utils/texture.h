@@ -12,20 +12,22 @@
 
 class Texture {
 public:
-	// Construct & Destructor
+	// Constructs & Destructor
 	Texture(unsigned int width, unsigned int height);
+	Texture();
 	~Texture();
 
-	void generate(const char* data);
+	void generate(unsigned char* data);
 	void bind() const;
-	void configure(
-		unsigned int internalFormat,
-		unsigned int imgFormat,
-		unsigned int wrapS,
-		unsigned int wrapT,
-		unsigned int filterMin,
-		unsigned int filterMax
-	);
+
+	// Configuration methods
+	void setDim(unsigned int width, unsigned int height);
+	void setFormat(unsigned int interalFormat, unsigned int imgFormat);
+	void setWrap(unsigned int wrapS, unsigned int wrapT);
+	void setFilter(unsigned int filterMin, unsigned int filterMax);
+
+	// Getters
+	unsigned int getId();
 
 private:
 	unsigned int m_id;
