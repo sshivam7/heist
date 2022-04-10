@@ -13,8 +13,6 @@
 
 #include "texture.h"
 
-#include "../../lib/stb_image.h"
-
 class TextureCache {
 public:
 	// Constructor & Destructor

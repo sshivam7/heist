@@ -1,5 +1,7 @@
 #include "texture_cache.h"
 
+#include "../../lib/stb_image.h"
+
 TextureCache::TextureCache() {
 
 }
@@ -13,19 +15,18 @@ Texture TextureCache::getTexture(std::string name) {
 }
 
 void TextureCache::loadTexture(std::string name, const char* fileName, bool alpha) {
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load(fileName, &width, &height, &nrChannels, 0);
+    Texture texture;
+    if (alpha)
+    {
+        texture.setFormat(GL_RGBA, GL_RGBA);
+    }
+    // load image
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load(fileName, &width, &height, &nrChannels, 0);
 
-	Texture texture(width, height);
-
-	if (alpha) {
-		texture.setFormat(GL_RGBA, GL_RGBA);
-	}
-
-	texture.generate(data);
-	
-	//free image data
-	stbi_image_free(data);
+    texture.Generate(width, height, data);
+    // free image data
+    stbi_image_free(data);
 	m_textures[name] = texture;
 }
 

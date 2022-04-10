@@ -2,10 +2,22 @@
 
 // Read from file and store data in string 
 std::string readFile(const char* fileName) {
-	std::ifstream input(fileName);
-	if (!input.is_open()) {
-		std::cerr << "ERROR::FILE >> " << fileName
-			<< " failed to open" << std::endl;
+	std::string shaderCode;
+
+	try {
+		std::ifstream codeFile(fileName);
+		if (!codeFile) {
+			std::cout << "ERROR::FILE: Could not be opened" << std::endl;
+		}
+		std::stringstream shaderStream;
+		shaderStream << codeFile.rdbuf();
+
+		codeFile.close();
+		shaderCode = shaderStream.str();
 	}
-	return std::string((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+	catch (std::exception e) {
+		std::cerr << "ERROR:FILE: Failed to read file " << std::endl;
+	}
+
+	return shaderCode;
 }

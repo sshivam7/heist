@@ -23,6 +23,7 @@ public:
 	void activate();
 	unsigned int getId();
 
+	void setInt(const char* name, int val);
 	void setVec3(const char* name, const glm::vec3& vec);
 	void setMat4(const char* name, const glm::mat4& matrix);
 

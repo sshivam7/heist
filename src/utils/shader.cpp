@@ -8,8 +8,11 @@
 
 // Shader constructor
 Shader::Shader(const char* vertexShaderFile, const char* fragmentShaderFile) {
-	const char* vertexShaderSource = readFile(vertexShaderFile).c_str();
-	const char* fragmentShaderSource = readFile(fragmentShaderFile).c_str();
+	std::string vString = readFile(vertexShaderFile);
+	std::string fString = readFile(fragmentShaderFile);
+
+	const char* vertexShaderSource = vString.c_str();
+	const char* fragmentShaderSource = fString.c_str();
 
 	// Create, attach, & compile vertex shader
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -47,6 +50,11 @@ void Shader::activate() {
 
 unsigned int Shader::getId() {
 	return this->m_id;
+}
+
+void Shader::setInt(const char* name, int val) {
+	unsigned int loc = glGetUniformLocation(this->m_id, name);
+	glUniform1i(loc, val);
 }
 
 void Shader::setVec3(const char* name, const glm::vec3& vec) {
