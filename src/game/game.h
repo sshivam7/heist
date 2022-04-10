@@ -10,6 +10,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <vector>
+
+#include "game_level.h"
 
 enum GameState {
 	GAME_ACTIVE,
@@ -34,8 +37,14 @@ public:
 
 private:
 	GameState m_state;
+	std::vector<GameLevel> m_levels;
+	unsigned int m_currentLevel;
+
 	bool m_keys[1024];
 	unsigned int m_width, m_height;
+
+	// Helper functions
+	void loadLevels(std::string path);
 };
 
 #endif

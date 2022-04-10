@@ -21,7 +21,7 @@ public:
 	~Sprite();
 
 	// Renders a defined quad textured with given sprite
-	void DrawSprite(
+	void drawSprite(
 		Texture& texture,
 		glm::vec2 position,
 		glm::vec2 size = glm::vec2(10.0f, 10.0f),

@@ -21,3 +21,7 @@ std::string readFile(const char* fileName) {
 
 	return shaderCode;
 }
+
+glm::vec3 getFloatCol(unsigned int r, unsigned int g, unsigned int b) {
+	return glm::vec3(r / 255.0f, g / 255.0f, b / 255.0f);
+}

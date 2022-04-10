@@ -11,14 +11,16 @@
 #include <iostream>
 
 #include "game/game.h"
+#include "../lib/stb_image.h"
 
 // Function declarations
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void config_window(GLFWwindow* window);
 
 // Constants 
-const unsigned int SCREEN_WIDTH = 900;
-const unsigned int SCREEN_HEIGHT = 600;
+const unsigned int SCREEN_WIDTH = 1000;
+const unsigned int SCREEN_HEIGHT = 700;
 const char* GAME_NAME = "Heist";
 
 Game game(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -39,6 +41,7 @@ int main(int argc, char* argv) {
 	}
 
 	glfwMakeContextCurrent(window);
+	config_window(window);
 
 	// GLAD: Load all glad function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -100,4 +103,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void config_window(GLFWwindow* window) {
+	// Center window in screen
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	unsigned int pos_x = (mode->width / 2) - (SCREEN_WIDTH / 2);
+	unsigned int pos_y = (mode->height / 2) - (SCREEN_HEIGHT / 2);
+
+	glfwSetWindowPos(window, pos_x, pos_y);
+
+	// Set Logo
+	GLFWimage images[1];
+	images[0].pixels = stbi_load("resources/logo.png", &images[0].width, &images[0].height, 0, 4);
+	glfwSetWindowIcon(window, 1, images);
+	stbi_image_free(images[0].pixels);
 }

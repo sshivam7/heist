@@ -6,6 +6,7 @@
 #include "../utils/sprite.h"
 
 #include <iostream>
+#include <filesystem>
 
 Sprite* renderer;
 
@@ -29,7 +30,34 @@ void Game::init() {
 	// set render-specific controls
 	renderer = new Sprite(shader);
 	// load textures
-	ResourceManager::loadTexture("face", "resources/awesomeface.png", true);
+	ResourceManager::loadTexture("standard_wall", "resources/standard_wall.png", true);
+
+	// Load game level
+	this->loadLevels("src/levels");
+}
+
+
+// Load all game levels from directory 
+void Game::loadLevels(std::string path) {
+	unsigned int curFile = 0;
+
+	for (const auto& entry : std::filesystem::directory_iterator(path)) {
+		std::string loc = entry.path().string();
+		std::replace(loc.begin(), loc.end(), '\\', '/');
+		
+		GameLevel lvl;
+		lvl.load_level(loc.c_str(), m_width, m_height);
+		this->m_levels.push_back(lvl);
+
+		unsigned int indexOfLastSlash = loc.find_last_of("/");
+		std::string fileName = loc.substr(indexOfLastSlash + 1);
+
+		if (fileName == "default.hlvl") {
+			this->m_currentLevel = curFile;
+		}
+
+		curFile++;
+	}
 }
 
 void Game::update(float dt) {
@@ -41,10 +69,9 @@ void Game::processInput(float dt) {
 }
 
 void Game::render() {
-	Texture spriteTexture = ResourceManager::getTexture("face");
-	renderer->DrawSprite(spriteTexture,
-		glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f),
-		45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	if (true) {
+		this->m_levels[this->m_currentLevel].draw_walls(*renderer);
+	}
 }
 
 bool Game::get_key(unsigned int index) {

@@ -11,7 +11,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <glm/glm.hpp>
 
 std::string readFile(const char* fileName);
+glm::vec3 getFloatCol(unsigned int r, unsigned int g, unsigned int b);
 
 #endif

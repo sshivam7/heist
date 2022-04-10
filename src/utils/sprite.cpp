@@ -8,7 +8,7 @@ Sprite::~Sprite() {
 	glDeleteVertexArrays(1, &this->m_quadVAO);
 }
 
-void Sprite::DrawSprite(Texture& texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
+void Sprite::drawSprite(Texture& texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
 {
     // prepare transformations
     this->m_shader.activate();

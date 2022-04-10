@@ -118,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +146,8 @@
     <ClCompile Include="lib\glad.c" />
     <ClCompile Include="lib\stb_image.cpp" />
     <ClCompile Include="src\game\game.cpp" />
+    <ClCompile Include="src\game\game_level.cpp" />
+    <ClCompile Include="src\game\game_object.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\utils\resource_manager.cpp" />
     <ClCompile Include="src\utils\shader.cpp" />
@@ -156,6 +159,8 @@
   <ItemGroup>
     <ClInclude Include="lib\stb_image.h" />
     <ClInclude Include="src\game\game.h" />
+    <ClInclude Include="src\game\game_level.h" />
+    <ClInclude Include="src\game\game_object.h" />
     <ClInclude Include="src\utils\resource_manager.h" />
     <ClInclude Include="src\utils\shader.h" />
     <ClInclude Include="src\utils\sprite.h" />
