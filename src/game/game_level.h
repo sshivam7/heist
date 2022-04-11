@@ -15,6 +15,7 @@
 #include <glm/glm.hpp>
 
 #include "game_object.h"
+#include "player.h"
 #include "../utils/sprite.h"
 #include "../utils/resource_manager.h"
 
@@ -22,12 +23,16 @@ class GameLevel {
 public:
 	GameLevel();
 
-	void load_level(const char* fileName, unsigned int width, unsigned int height);
-	void draw_walls(Sprite& renderer);
+	void loadLevel(const char* fileName, unsigned int width, unsigned int height);
+	void drawWalls(Sprite& renderer);
+
+	PlayerObject* getPlayer();
+	void getWalls();
 
 private:
 	// Walls
 	std::vector<GameObject> m_walls;
+	PlayerObject m_player;
 
 	// Initialize data
 	void init(std::vector<std::vector<unsigned int>> mapData, unsigned int levelWidth, unsigned int levelHeight);

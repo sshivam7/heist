@@ -22,6 +22,14 @@ public:
 	// drawing sprite
 	virtual void draw(Sprite& renderer);
 
+	// Getters & setters
+	glm::vec2 getPos();
+	void setPosX(float x);
+	void setPosY(float y);
+	
+	glm::vec2 getSize();
+	void setRotation(float rotation);
+
 private:
 	glm::vec2 m_pos, m_size;
 	glm::vec3 m_color;

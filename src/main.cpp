@@ -20,7 +20,7 @@ void config_window(GLFWwindow* window);
 
 // Constants 
 const unsigned int SCREEN_WIDTH = 1000;
-const unsigned int SCREEN_HEIGHT = 700;
+const unsigned int SCREEN_HEIGHT = 704;
 const char* GAME_NAME = "Heist";
 
 Game game(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -75,7 +75,7 @@ int main(int argc, char* argv) {
 		game.update(deltaTime);
 
 		// Set color and render game data
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(35/255.0f, 35/255.0f, 36/255.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		game.render();
 		glfwSwapBuffers(window);
