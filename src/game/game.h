@@ -19,6 +19,14 @@ enum GameState {
 	GAME_WIN
 };
 
+enum Direction {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+	NONE
+};
+
 // Holds all game data and functionality
 class Game {
 public:
@@ -45,6 +53,7 @@ private:
 
 	// Helper functions
 	void loadLevels(std::string path);
+	Direction checkPlayerCollisions(glm::vec2 pos, float radius);
 };
 
 #endif

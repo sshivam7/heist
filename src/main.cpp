@@ -19,7 +19,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void config_window(GLFWwindow* window);
 
 // Constants 
-const unsigned int SCREEN_WIDTH = 1000;
+const unsigned int SCREEN_WIDTH = 1020;
 const unsigned int SCREEN_HEIGHT = 704;
 const char* GAME_NAME = "Heist";
 

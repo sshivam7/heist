@@ -15,24 +15,29 @@
 #include <glm/glm.hpp>
 
 #include "game_object.h"
+#include "enemy_object.h"
 #include "player.h"
 #include "../utils/sprite.h"
 #include "../utils/resource_manager.h"
+#include "../utils/level_grid.h"
 
 class GameLevel {
 public:
-	GameLevel();
+	GameLevel(unsigned int width, unsigned int height);
 
 	void loadLevel(const char* fileName, unsigned int width, unsigned int height);
 	void drawWalls(Sprite& renderer);
 
 	PlayerObject* getPlayer();
-	void getWalls();
+	LevelGrid<GameObject> getWalls();
+	std::vector<EnemyObject> getEnemies();
 
 private:
+	unsigned int m_width, m_height;
 	// Walls
-	std::vector<GameObject> m_walls;
+	LevelGrid<GameObject> m_walls;
 	PlayerObject m_player;
+	std::vector<EnemyObject> m_enemies;
 
 	// Initialize data
 	void init(std::vector<std::vector<unsigned int>> mapData, unsigned int levelWidth, unsigned int levelHeight);

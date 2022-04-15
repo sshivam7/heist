@@ -7,15 +7,15 @@
 #include "../utils/util.h"
 #include "../utils/texture.h"
 
-GameLevel::GameLevel() {
-
+GameLevel::GameLevel(unsigned int width, unsigned int height) :
+	m_width(width), m_height(height), m_walls(3, m_width, m_height) {
 }
 
 void GameLevel::loadLevel(const char* fileName, unsigned int width, unsigned int height) {
 	// Clear old wall data
 	this->m_walls.clear();
 
-	GameLevel level;
+	GameLevel level(m_width, m_height);
 	std::string line;
 	std::ifstream fstream(fileName);
 	std::vector<std::vector<unsigned int>> mapData;
@@ -38,13 +38,25 @@ void GameLevel::loadLevel(const char* fileName, unsigned int width, unsigned int
 }
 
 void GameLevel::drawWalls(Sprite& renderer) {
-	for (GameObject& wall : this->m_walls) {
-		wall.draw(renderer);
+	// Render data from all grids
+	std::vector<std::vector<GameObject>> grids = this->m_walls.getGridObjects();
+	for (auto &grid : grids) {
+		for (GameObject& wall : grid) {
+			wall.draw(renderer);
+		}
 	}
 }
 
 PlayerObject* GameLevel::getPlayer() {
 	return &this->m_player;
+}
+
+LevelGrid<GameObject> GameLevel::getWalls() {
+	return this->m_walls;
+}
+
+std::vector<EnemyObject> GameLevel::getEnemies() {
+	return this->m_enemies;
 }
 
 void GameLevel::init(std::vector<std::vector<unsigned int>> mapData, unsigned int levelWidth, unsigned int levelHeight) {
@@ -74,7 +86,14 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> mapData, unsigned in
 					break;
 				}
 				GameObject obj(pos, size, texture, color);
-				this->m_walls.push_back(obj);
+				this->m_walls.addObject(obj, pos);
+			}
+			else if (mapData[col][row] == 7) {
+
+			}
+			else if (mapData[col][row] == 8) {
+				EnemyObject obj(pos, size, 125.0f, ResourceManager::getTexture("enemy"));
+				this->m_enemies.push_back(obj);
 			}
 			else if (mapData[col][row] == 9) {
 				PlayerObject obj(pos, size, 125.0f, ResourceManager::getTexture("player"));

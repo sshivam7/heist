@@ -21,9 +21,11 @@ public:
 
 	void setVelocity(float v);
 	float getVelocity();
+	float getRadius();
 
 private:
 	float m_velocity;
+	float m_radius;
 };
 
 #endif
