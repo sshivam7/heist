@@ -24,6 +24,7 @@ public:
 
 	// Getters & setters
 	glm::vec2 getPos();
+	void setPos(glm::vec2 pos);
 	void setPosX(float x);
 	void setPosY(float y);
 	

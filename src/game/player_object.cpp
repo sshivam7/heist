@@ -1,4 +1,4 @@
-#include "player.h"
+#include "player_object.h"
 
 PlayerObject::PlayerObject() :
 	GameObject(), m_velocity(500.0f) {

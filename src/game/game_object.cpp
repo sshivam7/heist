@@ -24,6 +24,10 @@ glm::vec2 GameObject::getPos() {
 	return this->m_pos;
 }
 
+void GameObject::setPos(glm::vec2 pos) {
+	this->m_pos = pos;
+}
+
 void GameObject::setPosX(float x) {
 	this->m_pos.x = x;
 }

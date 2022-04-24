@@ -16,7 +16,8 @@
 
 #include "game_object.h"
 #include "enemy_object.h"
-#include "player.h"
+#include "player_object.h"
+#include "path_finding/path_map.h"
 #include "../utils/sprite.h"
 #include "../utils/resource_manager.h"
 #include "../utils/level_grid.h"
@@ -32,12 +33,15 @@ public:
 	LevelGrid<GameObject> getWalls();
 	std::vector<EnemyObject> getEnemies();
 
+	PathMap getPathMap();
+
 private:
 	unsigned int m_width, m_height;
 	// Walls
 	LevelGrid<GameObject> m_walls;
 	PlayerObject m_player;
 	std::vector<EnemyObject> m_enemies;
+	PathMap m_pathMap;
 
 	// Initialize data
 	void init(std::vector<std::vector<unsigned int>> mapData, unsigned int levelWidth, unsigned int levelHeight);

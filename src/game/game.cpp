@@ -4,7 +4,8 @@
 #include "../utils/texture.h"
 #include "../utils/shader.h"
 #include "../utils/sprite.h"
-#include "player.h"
+#include "player_object.h"
+#include "path_finding\path_map.h"
 
 #include <iostream>
 #include <filesystem>
@@ -12,6 +13,8 @@
 Sprite* renderer;
 PlayerObject* player;
 std::vector<EnemyObject> enemies;
+
+PathMap pathMap;
 
 typedef std::tuple<bool, Direction> CollisionInfo;
 
@@ -43,6 +46,9 @@ void Game::init() {
 	this->loadLevels("src/levels");
 	player = this->m_levels[this->m_currentLevel].getPlayer();
 	enemies = this->m_levels[this->m_currentLevel].getEnemies();
+	pathMap = this->m_levels[this->m_currentLevel].getPathMap();
+
+	enemies[0].findPath(pathMap, player->getPos(), 30, 32);
 }
 
 
@@ -144,7 +150,7 @@ Direction Game::checkPlayerCollisions(glm::vec2 pos, float radius) {
 		for (GameObject& wall : grid) {
 			CollisionInfo collision = checkCollision(pos, radius, wall);
 			if (std::get<0>(collision)) {
-				std::cout << "COLLISION" << std::get<1>(collision) << std::endl;
+				// std::cout << "COLLISION: " << std::get<1>(collision) << std::endl;
 				colDir = std::get<1>(collision);
 			}
 		}

@@ -54,10 +54,13 @@
     <ClCompile Include="src\game\game_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\player.cpp">
+    <ClCompile Include="src\game\enemy_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\enemy_object.cpp">
+    <ClCompile Include="src\game\player_object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\path_finding\path_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,13 +95,16 @@
     <ClInclude Include="src\game\game_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\utils\level_grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\enemy_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\player_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\path_finding\path_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
