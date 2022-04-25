@@ -2,12 +2,10 @@
 #include <iostream>
 
 // Tile Initialization ------------------------------------------------------------------
-Tile::Tile() : m_pos(NULL), m_row(0), m_col(0), m_isValidLoc(false), m_cameFrom(glm::vec2(0)) {}
+Tile::Tile() : m_pos(NULL), m_row(0), m_col(0), m_isValidLoc(false) {}
 
 Tile::Tile(glm::vec2 pos, unsigned int mRow, unsigned int mCol, bool isValidLoc) :
-	m_pos(pos), m_row(mRow), m_col(mCol), m_isValidLoc(isValidLoc), m_cameFrom(glm::vec2(0)) {
-
-}
+	m_pos(pos), m_row(mRow), m_col(mCol), m_isValidLoc(isValidLoc) {}
 
 bool Tile::isValidLoc() {
 	return this->m_isValidLoc;
@@ -17,12 +15,8 @@ glm::vec2 Tile::getPos() {
 	return this->m_pos;
 }
 
-void Tile::setCameFrom(glm::vec2 cameFrom) {
-	this->m_cameFrom = cameFrom;
-}
-
-glm::vec2 Tile::getCameFrom() {
-	return this->m_cameFrom;
+bool Tile::operator<(const Tile& rhs) const noexcept {
+	return hypot(m_pos.x, m_pos.y) < hypot(rhs.m_pos.x, rhs.m_pos.y);
 }
 
 // PathMap Initialization ----------------------------------------------------------------
@@ -34,9 +28,8 @@ PathMap::PathMap(std::vector<Tile> pathGrid, unsigned int rowSize, unsigned int 
 }
 
 // Get all valid neighbouring tiles
-std::vector<Tile> PathMap::getNeighbours(Tile tile) {
-	std::vector<Tile> neighbours;
-
+void PathMap::getNeighbours(Tile tile, std::vector<Tile>& neighbours) {
+	neighbours.clear();
 	// Check surrounding directions
 	for (std::pair<int, int> dir : dirs) {
 		int newRow = tile.m_col + dir.first;
@@ -52,8 +45,6 @@ std::vector<Tile> PathMap::getNeighbours(Tile tile) {
 	if ((tile.m_row + tile.m_col) % 2 == 0) {
 		std::reverse(neighbours.begin(), neighbours.end());
 	}
-
-	return neighbours;
 }
 
 // Check if row col values fall within a valid range
@@ -70,6 +61,15 @@ void PathMap::setByArrLoc(unsigned int row, unsigned int col, Tile tile) {
 	this->m_pathGrid[this->m_colSize * row + col] = tile;
 }
 
+// Other accessor methods
 std::vector<Tile> PathMap::getTiles() {
 	return this->m_pathGrid;
+}
+
+unsigned int PathMap::getRowSize() {
+	return this->m_rowSize;
+}
+
+unsigned int PathMap::getColSize() {
+	return this->m_colSize;
 }

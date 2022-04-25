@@ -149,6 +149,7 @@
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\game\game_level.cpp" />
     <ClCompile Include="src\game\game_object.cpp" />
+    <ClCompile Include="src\game\path_finding\path_finding.cpp" />
     <ClCompile Include="src\game\path_finding\path_map.cpp" />
     <ClCompile Include="src\game\player_object.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\game\game_level.h" />
     <ClInclude Include="src\game\game_object.h" />
+    <ClInclude Include="src\game\path_finding\path_finding.h" />
     <ClInclude Include="src\game\path_finding\path_map.h" />
     <ClInclude Include="src\game\player_object.h" />
     <ClInclude Include="src\utils\level_grid.h" />

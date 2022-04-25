@@ -63,6 +63,9 @@
     <ClCompile Include="src\game\path_finding\path_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\path_finding\path_finding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\game.h">
@@ -105,6 +108,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\path_finding\path_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\path_finding\path_finding.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

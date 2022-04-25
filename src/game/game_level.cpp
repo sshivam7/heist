@@ -103,12 +103,12 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> mapData, unsigned in
 			}
 			else if (mapData[col][row] == 8) {
 				// Get random speed to make sure enemies do not overlap while chasing player
-				int randSpeed = (rand() % 26) + 100;
+				int randSpeed = (rand() % 51) + 75;
 				EnemyObject obj(pos, size, randSpeed, ResourceManager::getTexture("enemy"));
 				this->m_enemies.push_back(obj);
 			}
 			else if (mapData[col][row] == 9) {
-				PlayerObject obj(pos, size, 125.0f, ResourceManager::getTexture("player"));
+				PlayerObject obj(pos, size, 100.0f, ResourceManager::getTexture("player"));
 				this->m_player = obj;
 			}
 		}

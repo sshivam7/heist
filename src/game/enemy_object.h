@@ -21,14 +21,14 @@ public:
 	EnemyObject();
 	EnemyObject(glm::vec2 pos, glm::vec2 size, float velocity, Texture sprite);
 
-	std::unordered_map<glm::vec2, glm::vec2> findPath(
-		PathMap pathMap,
+	std::vector<glm::vec2> findPath(
+		PathMap& pathMap,
 		glm::vec2 dest,
-		unsigned int wallWidth,
-		unsigned int wallheight
+		unsigned int screenWidth,
+		unsigned int screenHeight
 	);
 
-	void move(float dt, glm::vec2 direction);
+	void move(float dt, glm::vec2 destination);
 };
 
 #endif

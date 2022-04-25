@@ -20,18 +20,12 @@ public:
 	bool isValidLoc();
 	glm::vec2 getPos();
 
-	void setCameFrom(glm::vec2 cameFrom);
-	glm::vec2 getCameFrom();
-
-	void markVisited(bool visited);
-	bool checkVisited();
+	bool operator<(const Tile& rhs) const noexcept;
 
 private:
 	glm::vec2 m_pos;
 	unsigned int m_row, m_col;
 	bool m_isValidLoc;
-	bool m_visited;
-	glm::vec2 m_cameFrom;
 
 	friend class PathMap;
 };
@@ -41,12 +35,14 @@ public:
 	PathMap();
 	PathMap(std::vector<Tile> pathGrid, unsigned int rowSize, unsigned int colSize);
 
-	std::vector<Tile> getNeighbours(Tile tile);
+	void getNeighbours(Tile tile, std::vector<Tile> &neighbours);
 
 	Tile getByArrLoc(unsigned int row, unsigned int col);
 	void setByArrLoc(unsigned int row, unsigned int col, Tile tile);
 	
 	std::vector<Tile> getTiles();
+	unsigned int getRowSize();
+	unsigned int getColSize();
 
 private:
 	std::vector<Tile> m_pathGrid;

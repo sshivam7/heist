@@ -5,7 +5,8 @@
 #include "../utils/shader.h"
 #include "../utils/sprite.h"
 #include "player_object.h"
-#include "path_finding\path_map.h"
+#include "path_finding/path_map.h"
+#include "path_finding/path_finding.h"
 
 #include <iostream>
 #include <filesystem>
@@ -13,6 +14,9 @@
 Sprite* renderer;
 PlayerObject* player;
 std::vector<EnemyObject> enemies;
+
+std::vector<int> path_indicies;
+std::vector<std::vector<glm::vec2>> paths;
 
 PathMap pathMap;
 
@@ -48,7 +52,11 @@ void Game::init() {
 	enemies = this->m_levels[this->m_currentLevel].getEnemies();
 	pathMap = this->m_levels[this->m_currentLevel].getPathMap();
 
-	enemies[0].findPath(pathMap, player->getPos(), 30, 32);
+	// Initialize Enemy path finding data
+	for (int i = 0; i < enemies.size(); ++i) {
+		paths.push_back(enemies[i].findPath(pathMap, player->getPos(), m_width, m_height));
+		path_indicies.push_back(0);
+	}
 }
 
 
@@ -75,7 +83,36 @@ void Game::loadLevels(std::string path) {
 	}
 }
 
+float timerCurrent = 0.0;
+float timerTotal = 1.0;
+
 void Game::update(float dt) {
+	timerCurrent += dt;
+	if (timerCurrent >= timerTotal) {
+		for (int i = 0; i < enemies.size(); ++i) {
+			paths[i] = enemies[i].findPath(pathMap, player->getPos(), m_width, m_height);
+			path_indicies[i] = 0;
+		}
+		timerCurrent -= timerTotal;
+	}
+
+	for (int i = 0; i < enemies.size(); ++i) {
+		updateEnemies(dt, enemies[i], paths[i], path_indicies[i]);
+	}
+}
+
+void Game::updateEnemies(float dt, EnemyObject& enemy, std::vector<glm::vec2>& path, int& path_index) {
+	if (path_index < path.size() && !path.empty()) {
+
+		if (enemy.getPos() != path[path_index]) {
+			enemy.move(dt, path[path_index]);
+		}
+
+		if (std::abs(enemy.getPos().y - path[path_index].y) < 1 &&
+			std::abs(enemy.getPos().x - path[path_index].x) < 1) {
+			path_index++;
+		}
+	}
 }
 
 void Game::processInput(float dt) {

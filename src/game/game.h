@@ -53,6 +53,7 @@ private:
 
 	// Helper functions
 	void loadLevels(std::string path);
+	void updateEnemies(float dt, EnemyObject& enemy, std::vector<glm::vec2>& path, int& path_index);
 	Direction checkPlayerCollisions(glm::vec2 pos, float radius);
 };
 
