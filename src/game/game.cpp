@@ -4,7 +4,6 @@
 #include "../utils/texture.h"
 #include "../utils/shader.h"
 #include "../utils/sprite.h"
-#include "player_object.h"
 #include "path_finding/path_map.h"
 #include "path_finding/path_finding.h"
 
@@ -14,6 +13,7 @@
 Sprite* renderer;
 PlayerObject* player;
 std::vector<EnemyObject> enemies;
+std::vector<GameObject> coins;
 
 std::vector<int> path_indicies;
 std::vector<std::vector<glm::vec2>> paths;
@@ -21,6 +21,10 @@ std::vector<std::vector<glm::vec2>> paths;
 PathMap pathMap;
 
 typedef std::tuple<bool, Direction> CollisionInfo;
+
+CollisionInfo checkCollision(glm::vec2 pos, float radius, GameObject& two);
+bool rectCollision(GameObject& one, GameObject& two);
+Direction getCollisionDirection(glm::vec2 target);
 
 Game::Game(unsigned int width, unsigned int height) :
 	m_state(GAME_ACTIVE), m_keys(), m_width(width), m_height(height) { }
@@ -50,6 +54,7 @@ void Game::init() {
 	this->loadLevels("src/levels");
 	player = this->m_levels[this->m_currentLevel].getPlayer();
 	enemies = this->m_levels[this->m_currentLevel].getEnemies();
+	coins = this->m_levels[this->m_currentLevel].getCoins();
 	pathMap = this->m_levels[this->m_currentLevel].getPathMap();
 
 	// Initialize Enemy path finding data
@@ -87,17 +92,38 @@ float timerCurrent = 0.0;
 float timerTotal = 1.0;
 
 void Game::update(float dt) {
-	timerCurrent += dt;
-	if (timerCurrent >= timerTotal) {
-		for (int i = 0; i < enemies.size(); ++i) {
-			paths[i] = enemies[i].findPath(pathMap, player->getPos(), m_width, m_height);
-			path_indicies[i] = 0;
+	if (this->m_state == GAME_ACTIVE) {
+		timerCurrent += dt;
+		if (timerCurrent >= timerTotal) {
+			for (int i = 0; i < enemies.size(); ++i) {
+				paths[i] = enemies[i].findPath(pathMap, player->getPos(), m_width, m_height);
+				path_indicies[i] = 1;
+			}
+			timerCurrent -= timerTotal;
 		}
-		timerCurrent -= timerTotal;
-	}
 
-	for (int i = 0; i < enemies.size(); ++i) {
-		updateEnemies(dt, enemies[i], paths[i], path_indicies[i]);
+		for (int i = 0; i < enemies.size(); ++i) {
+			updateEnemies(dt, enemies[i], paths[i], path_indicies[i]);
+			
+			if (checkEnemyCollision(enemies[i], *player)) {
+				this->m_state = GAME_LOSE;
+			}
+		}
+
+		// Remove coins if collision with player
+		std::vector<GameObject>::iterator iter;
+		for (iter = coins.begin(); iter != coins.end(); ) {
+			if (rectCollision(*iter, *player)) {
+				iter = coins.erase(iter);
+			}
+			else {
+				++iter;
+			}
+		}
+
+		if (coins.empty()) {
+			this->m_state = GAME_WIN;
+		}
 	}
 }
 
@@ -161,6 +187,10 @@ void Game::render() {
 		for (EnemyObject& enemy : enemies) {
 			enemy.draw(*renderer);
 		}
+
+		for (GameObject& coin : coins) {
+			coin.draw(*renderer);
+		}
 	}
 }
 
@@ -171,11 +201,6 @@ bool Game::get_key(unsigned int index) {
 void Game::set_key(unsigned int index, bool new_val) {
 	this->m_keys[index] = new_val;
 }
-
-
-CollisionInfo checkCollision(PlayerObject& one, GameObject& two);
-CollisionInfo checkCollision(glm::vec2 pos, float radius, GameObject& two);
-Direction getCollisionDirection(glm::vec2 target);
 
 Direction Game::checkPlayerCollisions(glm::vec2 pos, float radius) {
 	// Get all objects located in the current grid based on player position
@@ -196,28 +221,18 @@ Direction Game::checkPlayerCollisions(glm::vec2 pos, float radius) {
 	return colDir;
 }
 
-CollisionInfo checkCollision(PlayerObject& one, GameObject& two) {
-	// Get circle center
-	glm::vec2 center(one.getPos() + one.getRadius());
-	
-	// Calculate AABB center & half-extents
-	glm::vec2 halfExtents(two.getSize().x / 2.0f, two.getSize().y / 2.0f);
-	glm::vec2 boxCenter(two.getPos().x + halfExtents.x, two.getPos().y + halfExtents.y);
+bool Game::checkEnemyCollision(EnemyObject& one, GameObject& two) {
+	return std::get<1>(checkCollision(one.getPos(), one.getRadius(), two));
+}
 
-	// get difference vector between centers
-	glm::vec2 difference = center - boxCenter;
-	glm::vec2 clamped = glm::clamp(difference, -halfExtents, halfExtents);
-	glm::vec2 closest = boxCenter + clamped;
+bool rectCollision(GameObject& one, GameObject& two) {
+	bool xCollision = one.getPos().x + one.getSize().x >= two.getPos().x &&
+		two.getPos().x + two.getSize().x >= one.getPos().x;
 
-	// Vector between circle center and closest point on box
-	difference = closest - center;
+	bool yCollision = one.getPos().y + one.getSize().y >= two.getPos().y &&
+		two.getPos().y + two.getSize().y >= one.getPos().y;
 
-	if (glm::length(difference) <= one.getRadius()) {
-		return std::make_tuple(true, getCollisionDirection(difference));
-	}
-	else {
-		return std::make_tuple(false, UP);
-	}
+	return xCollision && yCollision;
 }
 
 CollisionInfo checkCollision(glm::vec2 pos, float radius, GameObject& two) {

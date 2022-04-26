@@ -13,8 +13,7 @@
 #include <unordered_map>
 
 #include "player_object.h"
-#include "../utils/texture.h"
-#include "path_finding/path_map.h"
+#include "../path_finding/path_map.h"
 
 class EnemyObject : public PlayerObject {
 public:

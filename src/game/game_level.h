@@ -14,9 +14,9 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "game_object.h"
-#include "enemy_object.h"
-#include "player_object.h"
+#include "./game_objects/game_object.h"
+#include "./game_objects/enemy_object.h"
+#include "./game_objects/player_object.h"
 #include "path_finding/path_map.h"
 #include "../utils/sprite.h"
 #include "../utils/resource_manager.h"
@@ -32,6 +32,7 @@ public:
 	PlayerObject* getPlayer();
 	LevelGrid<GameObject> getWalls();
 	std::vector<EnemyObject> getEnemies();
+	std::vector<GameObject> getCoins();
 
 	PathMap getPathMap();
 
@@ -41,6 +42,7 @@ private:
 	LevelGrid<GameObject> m_walls;
 	PlayerObject m_player;
 	std::vector<EnemyObject> m_enemies;
+	std::vector<GameObject> m_coins;
 	PathMap m_pathMap;
 
 	// Initialize data

@@ -59,6 +59,10 @@ std::vector<EnemyObject> GameLevel::getEnemies() {
 	return this->m_enemies;
 }
 
+std::vector<GameObject> GameLevel::getCoins() {
+	return this->m_coins;
+}
+
 PathMap GameLevel::getPathMap() {
 	return this->m_pathMap;
 }
@@ -78,28 +82,29 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> mapData, unsigned in
 			glm::vec2 size(wall_width, wall_height);
 
 			// Create Path grid to use for path finding
-			Tile tile(pos, row, col, mapData[col][row] == 0 || mapData[col][row] == 9 || mapData[col][row] == 7);
+			Tile tile(pos, row, col, mapData[col][row] == 0 || mapData[col][row] == 9 || mapData[col][row] == 7 || mapData[col][row] == 8);
 			pathGrid.push_back(tile);
 
 			// Draw all Level Walls
 			if (mapData[col][row] > 0 && mapData[col][row] <= 2) {
 				Texture texture;
-				glm::vec3 color;
+				glm::vec3 tileColor;
 				switch (mapData[col][row]) {
 				case 1:
-					color = getFloatCol(142, 191, 36);
+					tileColor = getFloatCol(142, 191, 36);
 					texture = ResourceManager::getTexture("standard_wall");
 					break;
 				case 2:
-					color = getFloatCol(191, 148, 96);
+					tileColor = getFloatCol(191, 148, 96);
 					texture = ResourceManager::getTexture("brick_wall");
 					break;
 				}
-				GameObject obj(pos, size, texture, color);
+				GameObject obj(pos, size, texture, tileColor);
 				this->m_walls.addObject(obj, pos);
 			}
 			else if (mapData[col][row] == 7) {
-				// TODO: render coins
+				GameObject obj(pos, size * 0.95f, ResourceManager::getTexture("coin"));
+				this->m_coins.push_back(obj);
 			}
 			else if (mapData[col][row] == 8) {
 				// Get random speed to make sure enemies do not overlap while chasing player

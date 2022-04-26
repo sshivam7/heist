@@ -16,7 +16,8 @@
 
 enum GameState {
 	GAME_ACTIVE,
-	GAME_WIN
+	GAME_WIN,
+	GAME_LOSE
 };
 
 enum Direction {
@@ -55,6 +56,7 @@ private:
 	void loadLevels(std::string path);
 	void updateEnemies(float dt, EnemyObject& enemy, std::vector<glm::vec2>& path, int& path_index);
 	Direction checkPlayerCollisions(glm::vec2 pos, float radius);
+	bool checkEnemyCollision(EnemyObject& one, GameObject& two);
 };
 
 #endif

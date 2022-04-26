@@ -145,13 +145,13 @@
   <ItemGroup>
     <ClCompile Include="lib\glad.c" />
     <ClCompile Include="lib\stb_image.cpp" />
-    <ClCompile Include="src\game\enemy_object.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\game\game_level.cpp" />
-    <ClCompile Include="src\game\game_object.cpp" />
+    <ClCompile Include="src\game\game_objects\enemy_object.cpp" />
+    <ClCompile Include="src\game\game_objects\game_object.cpp" />
+    <ClCompile Include="src\game\game_objects\player_object.cpp" />
     <ClCompile Include="src\game\path_finding\path_finding.cpp" />
     <ClCompile Include="src\game\path_finding\path_map.cpp" />
-    <ClCompile Include="src\game\player_object.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\utils\resource_manager.cpp" />
     <ClCompile Include="src\utils\shader.cpp" />
@@ -162,13 +162,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\stb_image.h" />
-    <ClInclude Include="src\game\enemy_object.h" />
     <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\game\game_level.h" />
-    <ClInclude Include="src\game\game_object.h" />
+    <ClInclude Include="src\game\game_objects\enemy_object.h" />
+    <ClInclude Include="src\game\game_objects\game_object.h" />
+    <ClInclude Include="src\game\game_objects\player_object.h" />
     <ClInclude Include="src\game\path_finding\path_finding.h" />
     <ClInclude Include="src\game\path_finding\path_map.h" />
-    <ClInclude Include="src\game\player_object.h" />
     <ClInclude Include="src\utils\level_grid.h" />
     <ClInclude Include="src\utils\resource_manager.h" />
     <ClInclude Include="src\utils\shader.h" />

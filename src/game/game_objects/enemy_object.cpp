@@ -3,7 +3,7 @@
 #include <queue>
 #include <iostream>
 
-#include "path_finding/path_finding.h"
+#include "../path_finding/path_finding.h"
 
 EnemyObject::EnemyObject() :
 	PlayerObject() {}

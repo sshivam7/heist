@@ -1,6 +1,6 @@
 /**
-* player.h
-* Description: Player object. extends game object 
+* player_object.h
+* Description: Player object. Extends game object 
 * @author Shivam Sood
 * @version 1.0
 */
@@ -12,7 +12,6 @@
 #include <glm/glm.hpp>
 
 #include "game_object.h"
-#include "../utils/texture.h"
 
 class PlayerObject : public GameObject {
 public:

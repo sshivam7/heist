@@ -11,8 +11,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "../utils/texture.h"
-#include "../utils/sprite.h"
+#include "../../utils/texture.h"
+#include "../../utils/sprite.h"
 
 class GameObject {
 public:
