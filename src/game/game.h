@@ -13,19 +13,13 @@
 #include <vector>
 
 #include "game_level.h"
+#include "collision_detection.h"
 
 enum GameState {
 	GAME_ACTIVE,
 	GAME_WIN,
-	GAME_LOSE
-};
-
-enum Direction {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	NONE
+	GAME_LOSE,
+	MAIN_MENU
 };
 
 // Holds all game data and functionality
@@ -43,17 +37,21 @@ public:
 
 	bool get_key(unsigned int index);
 	void set_key(unsigned int index, bool new_val);
+	void setProcessedKey(unsigned int index, bool new_val);
 
 private:
 	GameState m_state;
 	std::vector<GameLevel> m_levels;
 	unsigned int m_currentLevel;
+	unsigned int m_totalLevels;
 
 	bool m_keys[1024];
+	bool m_keysProcessed[1024];
 	unsigned int m_width, m_height;
 
 	// Helper functions
 	void loadLevels(std::string path);
+	void loadEntities();
 	void updateEnemies(float dt, EnemyObject& enemy, std::vector<glm::vec2>& path, int& path_index);
 	Direction checkPlayerCollisions(glm::vec2 pos, float radius);
 	bool checkEnemyCollision(EnemyObject& one, GameObject& two);

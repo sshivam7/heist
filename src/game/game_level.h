@@ -45,6 +45,8 @@ private:
 	std::vector<GameObject> m_coins;
 	PathMap m_pathMap;
 
+	glm::vec2 m_originalPlayerPos;
+
 	// Initialize data
 	void init(std::vector<std::vector<unsigned int>> mapData, unsigned int levelWidth, unsigned int levelHeight);
 };

@@ -16,6 +16,7 @@
 class Shader {
 public:
 	// Constructors & Destructor
+	Shader();
 	Shader(const char* vertexShaderFile, const char* fragmentShaderFile);
 	~Shader();
 

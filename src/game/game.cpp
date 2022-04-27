@@ -20,17 +20,11 @@ std::vector<std::vector<glm::vec2>> paths;
 
 PathMap pathMap;
 
-typedef std::tuple<bool, Direction> CollisionInfo;
-
-CollisionInfo checkCollision(glm::vec2 pos, float radius, GameObject& two);
-bool rectCollision(GameObject& one, GameObject& two);
-Direction getCollisionDirection(glm::vec2 target);
-
 Game::Game(unsigned int width, unsigned int height) :
-	m_state(GAME_ACTIVE), m_keys(), m_width(width), m_height(height) { }
+	m_state(MAIN_MENU), m_keys(), m_width(width), m_height(height) { }
 
 Game::~Game() {
-
+	delete renderer;
 }
 
 void Game::init() {
@@ -43,6 +37,7 @@ void Game::init() {
 	shader.setMat4("projection", proj);
 	// set render-specific controls
 	renderer = new Sprite(shader);
+
 	// load textures
 	ResourceManager::loadTexture("standard_wall", "resources/standard_wall.png", true);
 	ResourceManager::loadTexture("brick_wall", "resources/brick_wall.png", true);
@@ -50,12 +45,13 @@ void Game::init() {
 	ResourceManager::loadTexture("enemy", "resources/enemy.png", true);
 	ResourceManager::loadTexture("coin", "resources/coin.png", true);
 
+	ResourceManager::loadTexture("game_over", "resources/game_over.png", true);
+	ResourceManager::loadTexture("game_win", "resources/game_win.png", true);
+	ResourceManager::loadTexture("main", "resources/main_title.png", true);
+
 	// Load game level
 	this->loadLevels("src/levels");
-	player = this->m_levels[this->m_currentLevel].getPlayer();
-	enemies = this->m_levels[this->m_currentLevel].getEnemies();
-	coins = this->m_levels[this->m_currentLevel].getCoins();
-	pathMap = this->m_levels[this->m_currentLevel].getPathMap();
+	loadEntities();
 
 	// Initialize Enemy path finding data
 	for (int i = 0; i < enemies.size(); ++i) {
@@ -67,9 +63,10 @@ void Game::init() {
 
 // Load all game levels from directory 
 void Game::loadLevels(std::string path) {
+	this->m_totalLevels = 0;
 	unsigned int curFile = 0;
 
-	for (const auto& entry : std::filesystem::directory_iterator(path)) {
+	for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(path)) {
 		std::string loc = entry.path().string();
 		std::replace(loc.begin(), loc.end(), '\\', '/');
 		
@@ -84,6 +81,7 @@ void Game::loadLevels(std::string path) {
 			this->m_currentLevel = curFile;
 		}
 
+		this->m_totalLevels++;
 		curFile++;
 	}
 }
@@ -93,6 +91,7 @@ float timerTotal = 1.0;
 
 void Game::update(float dt) {
 	if (this->m_state == GAME_ACTIVE) {
+		// Update enemy path to player every second
 		timerCurrent += dt;
 		if (timerCurrent >= timerTotal) {
 			for (int i = 0; i < enemies.size(); ++i) {
@@ -102,6 +101,7 @@ void Game::update(float dt) {
 			timerCurrent -= timerTotal;
 		}
 
+		// Update enemy positions
 		for (int i = 0; i < enemies.size(); ++i) {
 			updateEnemies(dt, enemies[i], paths[i], path_indicies[i]);
 			
@@ -121,12 +121,14 @@ void Game::update(float dt) {
 			}
 		}
 
+		// Check win condition
 		if (coins.empty()) {
 			this->m_state = GAME_WIN;
 		}
 	}
 }
 
+// Update enemy locations to follow path
 void Game::updateEnemies(float dt, EnemyObject& enemy, std::vector<glm::vec2>& path, int& path_index) {
 	if (path_index < path.size() && !path.empty()) {
 
@@ -177,10 +179,36 @@ void Game::processInput(float dt) {
 			player->setRotation(180.0f);
 		}
 	}
+	else if (this->m_state == GAME_WIN || this->m_state == GAME_LOSE) {
+		if (this->m_keys[GLFW_KEY_ENTER]) {
+			this->m_keysProcessed[GLFW_KEY_ENTER] = true;
+			this->m_state = MAIN_MENU;
+		}
+	}
+	else if (this->m_state == MAIN_MENU) {
+		if (this->m_keys[GLFW_KEY_ENTER] && !this->m_keysProcessed[GLFW_KEY_ENTER]) {
+			loadEntities();
+			this->m_state = GAME_ACTIVE;
+			this->m_keysProcessed[GLFW_KEY_ENTER] = true;
+		}
+		if (this->m_keys[GLFW_KEY_A] && !this->m_keysProcessed[GLFW_KEY_A]) {
+			if (this->m_currentLevel > 0)
+				--this->m_currentLevel;
+			else
+				this->m_currentLevel = this->m_totalLevels - 1;
+			this->m_keysProcessed[GLFW_KEY_A] = true;
+			loadEntities();
+		}
+		if (this->m_keys[GLFW_KEY_D] && !this->m_keysProcessed[GLFW_KEY_D]) {
+			this->m_currentLevel = (this->m_currentLevel + 1) % this->m_totalLevels;
+			this->m_keysProcessed[GLFW_KEY_D] = true;
+			loadEntities();
+		}
+	}
 }
 
 void Game::render() {
-	if (this->m_state == GAME_ACTIVE) {
+	if (this->m_state == GAME_ACTIVE || this->m_state == MAIN_MENU) {
 		this->m_levels[this->m_currentLevel].drawWalls(*renderer);
 		player->draw(*renderer);
 
@@ -192,6 +220,27 @@ void Game::render() {
 			coin.draw(*renderer);
 		}
 	}
+	else if (this->m_state == GAME_LOSE) {
+		Texture gameOver = ResourceManager::getTexture("game_over");
+		renderer->drawSprite(gameOver, glm::vec2(0.0f, 0.0f), glm::vec2(m_width, m_height), 0.0f);
+	}
+	else if (this->m_state == GAME_WIN) {
+		Texture gameWin = ResourceManager::getTexture("game_win");
+		renderer->drawSprite(gameWin, glm::vec2(0.0f, 0.0f), glm::vec2(m_width, m_height), 0.0f);
+	}
+
+	if (this->m_state == MAIN_MENU) {
+		Texture main = ResourceManager::getTexture("main");
+		renderer->drawSprite(main, glm::vec2(0.25 * m_width, 0.3 * m_height), glm::vec2(m_width / 2, m_height / 2.5), 0.0f);
+	}
+}
+
+void Game::loadEntities() {
+	// Load all entities on selected level
+	player = this->m_levels[this->m_currentLevel].getPlayer();
+	enemies = this->m_levels[this->m_currentLevel].getEnemies();
+	coins = this->m_levels[this->m_currentLevel].getCoins();
+	pathMap = this->m_levels[this->m_currentLevel].getPathMap();
 }
 
 bool Game::get_key(unsigned int index) {
@@ -200,6 +249,10 @@ bool Game::get_key(unsigned int index) {
 
 void Game::set_key(unsigned int index, bool new_val) {
 	this->m_keys[index] = new_val;
+}
+
+void Game::setProcessedKey(unsigned int index, bool new_val) {
+	this->m_keysProcessed[index] = new_val;
 }
 
 Direction Game::checkPlayerCollisions(glm::vec2 pos, float radius) {
@@ -223,59 +276,4 @@ Direction Game::checkPlayerCollisions(glm::vec2 pos, float radius) {
 
 bool Game::checkEnemyCollision(EnemyObject& one, GameObject& two) {
 	return std::get<1>(checkCollision(one.getPos(), one.getRadius(), two));
-}
-
-bool rectCollision(GameObject& one, GameObject& two) {
-	bool xCollision = one.getPos().x + one.getSize().x >= two.getPos().x &&
-		two.getPos().x + two.getSize().x >= one.getPos().x;
-
-	bool yCollision = one.getPos().y + one.getSize().y >= two.getPos().y &&
-		two.getPos().y + two.getSize().y >= one.getPos().y;
-
-	return xCollision && yCollision;
-}
-
-CollisionInfo checkCollision(glm::vec2 pos, float radius, GameObject& two) {
-	// Get circle center
-	glm::vec2 center(pos + radius);
-
-	// Calculate AABB center & half-extents
-	glm::vec2 halfExtents(two.getSize().x / 2.0f, two.getSize().y / 2.0f);
-	glm::vec2 boxCenter(two.getPos().x + halfExtents.x, two.getPos().y + halfExtents.y);
-
-	// get difference vector between centers
-	glm::vec2 difference = center - boxCenter;
-	glm::vec2 clamped = glm::clamp(difference, -halfExtents, halfExtents);
-	glm::vec2 closest = boxCenter + clamped;
-
-	// Vector between circle center and closest point on box
-	difference = closest - center;
-
-	if (glm::length(difference) <= radius) {
-		return std::make_tuple(true, getCollisionDirection(difference));
-	}
-	else {
-		return std::make_tuple(false, UP);
-	}
-}
-
-Direction getCollisionDirection(glm::vec2 target) {
-	glm::vec2 compass[] = {
-		glm::vec2(0.0f, -1.0f), // DOWN
-		glm::vec2(0.0f, 1.0f),  // UP
-		glm::vec2(-1.0f, 0.0f), // LEFT
-		glm::vec2(1.0f, 0.0f)   // RIGHT
-	};
-
-	float max = 0.0f;
-	unsigned int bestMatch = -1;
-	for (unsigned int i = 0; i < 4; ++i) {
-		float dotProd = glm::dot(glm::normalize(target), compass[i]);
-		if (dotProd > max) {
-			max = dotProd;
-			bestMatch = i;
-		}
-	}
-
-	return (Direction)bestMatch;
 }

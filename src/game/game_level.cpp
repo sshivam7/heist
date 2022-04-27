@@ -48,6 +48,7 @@ void GameLevel::drawWalls(Sprite& renderer) {
 }
 
 PlayerObject* GameLevel::getPlayer() {
+	this->m_player.setPos(m_originalPlayerPos);
 	return &this->m_player;
 }
 
@@ -113,6 +114,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> mapData, unsigned in
 				this->m_enemies.push_back(obj);
 			}
 			else if (mapData[col][row] == 9) {
+				this->m_originalPlayerPos = pos;
 				PlayerObject obj(pos, size, 100.0f, ResourceManager::getTexture("player"));
 				this->m_player = obj;
 			}

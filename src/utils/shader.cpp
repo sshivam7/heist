@@ -40,6 +40,8 @@ Shader::Shader(const char* vertexShaderFile, const char* fragmentShaderFile) {
 	glDeleteShader(fragmentShader);
 }
 
+Shader::Shader() {}
+
 Shader::~Shader() {
 	glDeleteProgram(this->m_id);
 }
