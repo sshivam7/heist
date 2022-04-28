@@ -15,6 +15,7 @@ void GameLevel::loadLevel(const char* fileName, unsigned int width, unsigned int
 	// Clear old wall data
 	this->m_walls.clear();
 
+	// Read level data from file
 	GameLevel level(m_width, m_height);
 	std::string line;
 	std::ifstream fstream(fileName);
@@ -37,8 +38,9 @@ void GameLevel::loadLevel(const char* fileName, unsigned int width, unsigned int
 	}
 }
 
+
+// Render data from all grids
 void GameLevel::drawWalls(Sprite& renderer) {
-	// Render data from all grids
 	std::vector<std::vector<GameObject>> grids = this->m_walls.getGridObjects();
 	for (auto &grid : grids) {
 		for (GameObject& wall : grid) {
@@ -47,6 +49,7 @@ void GameLevel::drawWalls(Sprite& renderer) {
 	}
 }
 
+// Getter methods for level entities
 PlayerObject* GameLevel::getPlayer() {
 	this->m_player.setPos(m_originalPlayerPos);
 	return &this->m_player;
@@ -86,16 +89,18 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> mapData, unsigned in
 			Tile tile(pos, row, col, mapData[col][row] == 0 || mapData[col][row] == 9 || mapData[col][row] == 7 || mapData[col][row] == 8);
 			pathGrid.push_back(tile);
 
-			// Draw all Level Walls
+			// Create all wall objects
 			if (mapData[col][row] > 0 && mapData[col][row] <= 2) {
 				Texture texture;
 				glm::vec3 tileColor;
 				switch (mapData[col][row]) {
 				case 1:
+					// Plain walls
 					tileColor = getFloatCol(142, 191, 36);
 					texture = ResourceManager::getTexture("standard_wall");
 					break;
 				case 2:
+					// Brick walls
 					tileColor = getFloatCol(191, 148, 96);
 					texture = ResourceManager::getTexture("brick_wall");
 					break;
@@ -104,16 +109,19 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> mapData, unsigned in
 				this->m_walls.addObject(obj, pos);
 			}
 			else if (mapData[col][row] == 7) {
+				// Render coins
 				GameObject obj(pos, size * 0.95f, ResourceManager::getTexture("coin"));
 				this->m_coins.push_back(obj);
 			}
 			else if (mapData[col][row] == 8) {
+				// Render enemies
 				// Get random speed to make sure enemies do not overlap while chasing player
 				int randSpeed = (rand() % 51) + 75;
 				EnemyObject obj(pos, size, randSpeed, ResourceManager::getTexture("enemy"));
 				this->m_enemies.push_back(obj);
 			}
 			else if (mapData[col][row] == 9) {
+				// Render player
 				this->m_originalPlayerPos = pos;
 				PlayerObject obj(pos, size, 100.0f, ResourceManager::getTexture("player"));
 				this->m_player = obj;

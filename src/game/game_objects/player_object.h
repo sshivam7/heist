@@ -15,14 +15,17 @@
 
 class PlayerObject : public GameObject {
 public:
+	// Constructors
 	PlayerObject();
 	PlayerObject(glm::vec2 pos, glm::vec2 size, float velocity, Texture sprite);
 
+	// Getter & Setter methods
 	void setVelocity(float v);
 	float getVelocity();
 	float getRadius();
 
 private:
+	// Member variables
 	float m_velocity;
 	float m_radius;
 };

@@ -10,6 +10,7 @@ PlayerObject::PlayerObject(glm::vec2 pos, glm::vec2 size, float velocity, Textur
 	m_radius = this->getSize().x / 2;
 }
 
+// Getter & setter for velocity and radius
 void PlayerObject::setVelocity(float v) {
 	this->m_velocity = v;
 }

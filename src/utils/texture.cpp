@@ -16,6 +16,7 @@ Texture::Texture() :
     glGenTextures(1, &this->m_id);
 }
 
+// Generate texture
 void Texture::Generate(unsigned int width, unsigned int height, unsigned char* data)
 {
     this->m_width = width;
@@ -32,11 +33,13 @@ void Texture::Generate(unsigned int width, unsigned int height, unsigned char* d
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+// Bind texture
 void Texture::bind() const
 {
     glBindTexture(GL_TEXTURE_2D, this->m_id);
 }
 
+// Texture getter & setter methods
 unsigned int Texture::getId() {
     return m_id;
 }

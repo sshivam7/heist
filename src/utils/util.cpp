@@ -1,6 +1,6 @@
 #include "util.h"
 
-// Read from file and store data in string 
+// Utility function to read from file and store data in string
 std::string readFile(const char* fileName) {
 	std::string shaderCode;
 
@@ -22,6 +22,7 @@ std::string readFile(const char* fileName) {
 	return shaderCode;
 }
 
+// Helper function to convert integer RGB values into floats 
 glm::vec3 getFloatCol(unsigned int r, unsigned int g, unsigned int b) {
 	return glm::vec3(r / 255.0f, g / 255.0f, b / 255.0f);
 }

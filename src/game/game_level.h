@@ -29,6 +29,7 @@ public:
 	void loadLevel(const char* fileName, unsigned int width, unsigned int height);
 	void drawWalls(Sprite& renderer);
 
+	// Getter methods
 	PlayerObject* getPlayer();
 	LevelGrid<GameObject> getWalls();
 	std::vector<EnemyObject> getEnemies();

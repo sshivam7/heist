@@ -18,15 +18,19 @@ std::vector<glm::vec2> EnemyObject::findPath(
 	unsigned int screenWidth,
 	unsigned int screenHeight
 ) {
+	// Calculate tile width and height
 	float tileWidth = (screenWidth / static_cast<float>(pathMap.getColSize()));
 	float tileHeight = (screenHeight / static_cast<float>(pathMap.getRowSize()));
 	
+	// Get start and end tiles
 	std::vector<glm::vec2> path;
 	Tile startTile = pathMap.getByArrLoc(
 		(int)(this->getPos().y / tileHeight),
 		(int)(this->getPos().x / tileWidth)
 	);
 	Tile endTile = pathMap.getByArrLoc(dest.y / tileHeight, dest.x / tileWidth);
+
+	// Find path using A* path finding algorithm
 	aStarPathFind(pathMap, startTile, endTile, path);
 
 	return path;
@@ -38,6 +42,7 @@ void EnemyObject::move(float dt, glm::vec2 destination) {
 	direction.x = (int)std::round(direction.x);
 	direction.y = (int)std::round(direction.y);
 
+	// Rotate enemy to face direction of movement
 	if (direction == glm::vec2(0, 1)) {
 		this->setRotation(180);
 	}

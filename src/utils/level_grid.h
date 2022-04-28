@@ -15,6 +15,7 @@
 template <typename T>
 class LevelGrid {
 public:
+	// Constructor
 	LevelGrid(unsigned int gridSize, unsigned int width, unsigned int height);
 
 	void addObject(T obj, glm::vec2 pos);
@@ -26,6 +27,7 @@ public:
 	std::vector<std::vector<T>> getGridObjects();
 
 private:
+	// Member variables
 	unsigned int m_gridSize;
 	unsigned int m_width, m_height;
 
@@ -41,6 +43,7 @@ LevelGrid<T>::LevelGrid(unsigned int gridSize, unsigned int width, unsigned int 
 	}
 }
 
+// add new object to LevelGrid
 template <typename T>
 void LevelGrid<T>::addObject(T obj, glm::vec2 pos) {
 	m_gridObject[this->getGridBlock(pos)].push_back(obj);
@@ -53,6 +56,7 @@ void LevelGrid<T>::clear() {
 	}
 }
 
+// Getter methods
 template <typename T>
 std::vector<std::vector<T>> LevelGrid<T>::getGridObjects() {
 	return this->m_gridObject;
@@ -63,6 +67,7 @@ std::vector<T> LevelGrid<T>::getGrid(glm::vec2 pos) {
 	return m_gridObject[this->getGridBlock(pos)];
 }
 
+// Get grid set (current grid + surrounding tiles)
 template <typename T>
 std::vector<std::vector<T>> LevelGrid<T>::getGridSet(glm::vec2 pos) {
 	std::vector<std::vector<T>> gridSet;
@@ -81,6 +86,7 @@ std::vector<std::vector<T>> LevelGrid<T>::getGridSet(glm::vec2 pos) {
 	return gridSet;
 }
 
+// Return integer value representing current grid block
 template <typename T>
 int LevelGrid<T>::getGridBlock(glm::vec2 pos) {
 	for (int x = 1; x <= m_gridSize; ++x) {

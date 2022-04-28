@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+// Tile class used to store data for path finding
 class Tile {
 public:
 	Tile();
@@ -30,16 +31,21 @@ private:
 	friend class PathMap;
 };
 
+// Grid class used in path finding algorithm(s)
 class PathMap {
 public:
+	// Constructors
 	PathMap();
 	PathMap(std::vector<Tile> pathGrid, unsigned int rowSize, unsigned int colSize);
 
+	// Get all tile neighbours
 	void getNeighbours(Tile tile, std::vector<Tile> &neighbours);
 
+	// Methods to access array by row and column
 	Tile getByArrLoc(unsigned int row, unsigned int col);
 	void setByArrLoc(unsigned int row, unsigned int col, Tile tile);
 	
+	// Getter methods
 	std::vector<Tile> getTiles();
 	unsigned int getRowSize();
 	unsigned int getColSize();
@@ -47,8 +53,8 @@ public:
 private:
 	std::vector<Tile> m_pathGrid;
 	unsigned int m_rowSize, m_colSize;
-	static inline const std::vector<std::pair<int, int>> dirs = { {0,1},{1,0},{0,-1},{-1,0} };
 
+	static inline const std::vector<std::pair<int, int>> dirs = { {0,1},{1,0},{0,-1},{-1,0} };
 	bool inRange(int row, int col);
 };
 

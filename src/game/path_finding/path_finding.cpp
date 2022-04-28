@@ -13,6 +13,7 @@ namespace std {
 	};
 }
 
+// Implement A* path finding algorithm (All graph tiles are given equal weight)
 void aStarPathFind(PathMap& pathMap, Tile start, Tile destination, std::vector<glm::vec2>& path) {
 	std::priority_queue<PriorityElement, std::vector<PriorityElement>, std::greater<PriorityElement>> frontier;
 	std::vector<Tile> neighbours;
@@ -29,6 +30,7 @@ void aStarPathFind(PathMap& pathMap, Tile start, Tile destination, std::vector<g
 			break;
 		}
 
+		// Append valid neighbours to priority queue
 		pathMap.getNeighbours(current, neighbours);
 		for (Tile next : neighbours) {
 			if (cameFrom.find(next.getPos()) == cameFrom.end()) {
@@ -47,6 +49,7 @@ void aStarPathFind(PathMap& pathMap, Tile start, Tile destination, std::vector<g
 		currentPos = cameFrom[currentPos];
 	}
 
+	// Reverse path (to point enemy to player)
 	std::reverse(path.begin(), path.end());
 }
 

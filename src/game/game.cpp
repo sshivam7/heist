@@ -28,8 +28,8 @@ Game::~Game() {
 }
 
 void Game::init() {
-	Shader shader("src/shaders/sprite.vs", "src/shaders/sprite.fs");
 	// configure shaders
+	Shader shader("src/shaders/sprite.vs", "src/shaders/sprite.fs");
 	glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(m_width),
 		static_cast<float>(m_height), 0.0f, -1.0f, 1.0f);
 	shader.activate();
@@ -38,13 +38,14 @@ void Game::init() {
 	// set render-specific controls
 	renderer = new Sprite(shader);
 
-	// load textures
+	// load game textures
 	ResourceManager::loadTexture("standard_wall", "resources/standard_wall.png", true);
 	ResourceManager::loadTexture("brick_wall", "resources/brick_wall.png", true);
 	ResourceManager::loadTexture("player", "resources/player.png", true);
 	ResourceManager::loadTexture("enemy", "resources/enemy.png", true);
 	ResourceManager::loadTexture("coin", "resources/coin.png", true);
 
+	// Load menu textures
 	ResourceManager::loadTexture("game_over", "resources/game_over.png", true);
 	ResourceManager::loadTexture("game_win", "resources/game_win.png", true);
 	ResourceManager::loadTexture("main", "resources/main_title.png", true);
@@ -66,6 +67,7 @@ void Game::loadLevels(std::string path) {
 	this->m_totalLevels = 0;
 	unsigned int curFile = 0;
 
+	// Loop through all files in directory and load levels
 	for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(path)) {
 		std::string loc = entry.path().string();
 		std::replace(loc.begin(), loc.end(), '\\', '/');
@@ -77,6 +79,7 @@ void Game::loadLevels(std::string path) {
 		unsigned int indexOfLastSlash = loc.find_last_of("/");
 		std::string fileName = loc.substr(indexOfLastSlash + 1);
 
+		// use default.hlvl as the default starting level
 		if (fileName == "default.hlvl") {
 			this->m_currentLevel = curFile;
 		}
@@ -150,6 +153,7 @@ void Game::processInput(float dt) {
 		glm::vec2 pos = player->getPos();
 		glm::vec2 size = player->getSize();
 
+		// Setup player movement using W A S D keys 
 		if (this->m_keys[GLFW_KEY_A]) {
 			glm::vec2 lPos(pos.x - velocity, pos.y);
 			if (pos.x >= 0.0f && checkPlayerCollisions(lPos, radius) != LEFT) {
@@ -180,12 +184,14 @@ void Game::processInput(float dt) {
 		}
 	}
 	else if (this->m_state == GAME_WIN || this->m_state == GAME_LOSE) {
+		// Return to main menu when enter is pressed
 		if (this->m_keys[GLFW_KEY_ENTER]) {
 			this->m_keysProcessed[GLFW_KEY_ENTER] = true;
 			this->m_state = MAIN_MENU;
 		}
 	}
 	else if (this->m_state == MAIN_MENU) {
+		// Start game on enter and switch levels using A and D
 		if (this->m_keys[GLFW_KEY_ENTER] && !this->m_keysProcessed[GLFW_KEY_ENTER]) {
 			loadEntities();
 			this->m_state = GAME_ACTIVE;
@@ -209,9 +215,11 @@ void Game::processInput(float dt) {
 
 void Game::render() {
 	if (this->m_state == GAME_ACTIVE || this->m_state == MAIN_MENU) {
+		// Render walls & player
 		this->m_levels[this->m_currentLevel].drawWalls(*renderer);
 		player->draw(*renderer);
 
+		// Render enemies & coins
 		for (EnemyObject& enemy : enemies) {
 			enemy.draw(*renderer);
 		}
@@ -221,14 +229,17 @@ void Game::render() {
 		}
 	}
 	else if (this->m_state == GAME_LOSE) {
+		// Load game lose screen
 		Texture gameOver = ResourceManager::getTexture("game_over");
 		renderer->drawSprite(gameOver, glm::vec2(0.0f, 0.0f), glm::vec2(m_width, m_height), 0.0f);
 	}
 	else if (this->m_state == GAME_WIN) {
+		// Load game win screen
 		Texture gameWin = ResourceManager::getTexture("game_win");
 		renderer->drawSprite(gameWin, glm::vec2(0.0f, 0.0f), glm::vec2(m_width, m_height), 0.0f);
 	}
 
+	// Display main menu screen
 	if (this->m_state == MAIN_MENU) {
 		Texture main = ResourceManager::getTexture("main");
 		renderer->drawSprite(main, glm::vec2(0.25 * m_width, 0.3 * m_height), glm::vec2(m_width / 2, m_height / 2.5), 0.0f);
@@ -236,13 +247,14 @@ void Game::render() {
 }
 
 void Game::loadEntities() {
-	// Load all entities on selected level
+	// Load all entities for selected level
 	player = this->m_levels[this->m_currentLevel].getPlayer();
 	enemies = this->m_levels[this->m_currentLevel].getEnemies();
 	coins = this->m_levels[this->m_currentLevel].getCoins();
 	pathMap = this->m_levels[this->m_currentLevel].getPathMap();
 }
 
+// Methods to get & set key data
 bool Game::get_key(unsigned int index) {
 	return this->m_keys[index];
 }
@@ -255,6 +267,7 @@ void Game::setProcessedKey(unsigned int index, bool new_val) {
 	this->m_keysProcessed[index] = new_val;
 }
 
+// Check player collisions
 Direction Game::checkPlayerCollisions(glm::vec2 pos, float radius) {
 	// Get all objects located in the current grid based on player position
 	std::vector<std::vector<GameObject>> grids = m_levels[m_currentLevel].getWalls().getGridSet(pos);
@@ -265,7 +278,6 @@ Direction Game::checkPlayerCollisions(glm::vec2 pos, float radius) {
 		for (GameObject& wall : grid) {
 			CollisionInfo collision = checkCollision(pos, radius, wall);
 			if (std::get<0>(collision)) {
-				// std::cout << "COLLISION: " << std::get<1>(collision) << std::endl;
 				colDir = std::get<1>(collision);
 			}
 		}
@@ -274,6 +286,7 @@ Direction Game::checkPlayerCollisions(glm::vec2 pos, float radius) {
 	return colDir;
 }
 
+// Check enemy collisions
 bool Game::checkEnemyCollision(EnemyObject& one, GameObject& two) {
 	return std::get<1>(checkCollision(one.getPos(), one.getRadius(), two));
 }

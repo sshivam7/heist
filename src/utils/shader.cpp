@@ -54,6 +54,7 @@ unsigned int Shader::getId() {
 	return this->m_id;
 }
 
+// Helper functions to help set uniform data
 void Shader::setInt(const char* name, int val) {
 	unsigned int loc = glGetUniformLocation(this->m_id, name);
 	glUniform1i(loc, val);
@@ -69,6 +70,7 @@ void Shader::setMat4(const char* name, const glm::mat4& matrix) {
 	glUniformMatrix4fv(loc, 1, false, glm::value_ptr(matrix));
 }
 
+// Helper function to check with shader errors
 void Shader::checkErrors(unsigned int shader, const char* type) {
 	GLint success;
 	char infoLog[1024];

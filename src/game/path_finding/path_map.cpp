@@ -61,7 +61,7 @@ void PathMap::setByArrLoc(unsigned int row, unsigned int col, Tile tile) {
 	this->m_pathGrid[this->m_colSize * row + col] = tile;
 }
 
-// Other accessor methods
+// Other getter methods
 std::vector<Tile> PathMap::getTiles() {
 	return this->m_pathGrid;
 }

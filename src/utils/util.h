@@ -1,6 +1,6 @@
 /**
 * util.h
-* Description: Utility functions used in Heist game
+* Description: Collection of utility functions for Heist game
 * @author Shivam Sood
 * @version 1.0
 */
